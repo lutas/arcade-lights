@@ -2,9 +2,8 @@
 #define _STATE_H_
 
 enum State { 
-
-    On,
     Off,
+    On,
     SlowPulse,
     FastPulse   
 };
