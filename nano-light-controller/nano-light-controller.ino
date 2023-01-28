@@ -2,8 +2,7 @@
 #include "comms.h"
 
 IEntity** pEntities;
-
-bool on;
+unsigned long currentTime = 0;
 
 void setup()
 {
@@ -20,19 +19,19 @@ void setup()
     pEntities[i]->init();
   }
 
-  on = true;
+  currentTime = millis();
 }
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
-  on = !on;  
+  unsigned long elapsedTime = millis() - currentTime;
+  currentTime = millis();
   
   int numEntities = sizeof(*pEntities) / sizeof(IEntity*);
   for (int i = 0; i < numEntities; ++i) {
 
-    pEntities[i]->update(0);
+    pEntities[i]->update(elapsedTime);
   }
   
-  delay(3000);
+  delay(5);
 }
