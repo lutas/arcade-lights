@@ -1,19 +1,22 @@
 #ifndef __LIGHTMANAGER_H__
 #define __LIGHTMANAGER_H__
 
+#include <stdint.h>
+
 #include "state.h"
 #include "IEntity.h"
 #include "IStateChange.h"
 
-#include "Light.h"
-
-#include <stdint.h>
+#include "light.h"
+#include "pulse.h"
 
 #define NUM_LIGHTS 8
 
 class LightManager : public IStateChange, public IEntity {
 
 public:
+    LightManager();
+
     int numLights() const { return NUM_LIGHTS; };
     
     // IEntity
@@ -24,12 +27,13 @@ public:
     void onMessage(uint8_t lightId, State state);
 private:
     Light _lights[NUM_LIGHTS];
+    State _lightStates[NUM_LIGHTS];
     void setLight(uint32_t id, bool on);
 
     // keep single vars for pulse delay 
     // so all lights are matched to the same pulse
-    int _fastPulseTime;
-    int _slowPulseTime;
+    Pulse _fastPulse;
+    Pulse _slowPulse;
 };
 
 

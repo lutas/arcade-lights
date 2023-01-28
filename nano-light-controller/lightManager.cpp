@@ -1,9 +1,17 @@
 #include "lightManager.h"
 
-namespace {
-    const int FastPulseDelay = 50;
-    const int SlowPulseDelay = 200;
-};
+LightManager::LightManager()
+{
+    _fastPulse.setOnDelay(50);
+    _fastPulse.setOffDelay(25);
+
+    _slowPulse.setOnDelay(300);
+    _slowPulse.setOffDelay(150);
+
+    for (int i = 0; i < NUM_LIGHTS; ++i) {
+        _lightStates[i] = State::Off;
+    }
+}
 
 void LightManager::init() {
 
@@ -16,9 +24,6 @@ void LightManager::init() {
     _lights[light++].setPin(12);
     _lights[light++].setPin(14); // A0
     _lights[light++].setPin(16); // A2
-
-    _fastPulseTime = FastPulseDelay;
-    _slowPulseTime = SlowPulseDelay;
 }
 
 void LightManager::setLight(uint32_t id, bool on) {
@@ -30,16 +35,38 @@ void LightManager::setLight(uint32_t id, bool on) {
 }
 
 void LightManager::onMessage(uint8_t lightId, State state) {
-
+    _lightStates[lightId] = state;
+    if (state == State::On) {
+        _lights[lightId].setState(true);
+    }
+    if (state == State::Off) {
+        _lights[lightId].setState(false);
+    }
 }
 
 void LightManager::update(int millis) {
-    static bool on = true;
+    bool fastPulseChanged = _fastPulse.update(millis);
+    bool slowPulseChanged = _slowPulse.update(millis);    
 
-    on = !on;
-
-    for (int i = 0; i < NUM_LIGHTS; ++i)
+    int i = 0;
+    for (; i < NUM_LIGHTS; ++i)
     {
-        setLight(i, on);
+        switch (_lightStates[i]) {
+            case State::FastPulse:
+            {
+                if (fastPulseChanged) {
+                    _lights[i].setState(_fastPulse.isOn());
+                }
+            }
+            break;
+
+            case State::SlowPulse:
+            {
+                if (slowPulseChanged) {
+                    _lights[i].setState(_slowPulse.isOn());
+                }
+            }
+            break;
+        }
     }
 }
