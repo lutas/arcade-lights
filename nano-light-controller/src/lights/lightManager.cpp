@@ -34,7 +34,7 @@ void LightManager::setLight(uint32_t id, bool on) {
     _lights[id].setState(on);
 }
 
-void LightManager::onMessage(uint8_t lightId, State state) {
+void LightManager::setLightState(uint8_t lightId, State state) {
     _lightStates[lightId] = state;
     if (state == State::On) {
         _lights[lightId].setState(true);

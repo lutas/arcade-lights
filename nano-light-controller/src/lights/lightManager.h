@@ -24,7 +24,7 @@ public:
     void update(int elapsedMillis);
     
     // IStateChange
-    void onMessage(uint8_t lightId, State state);
+    void setLightState(uint8_t lightId, State state);
 private:
     Light _lights[NUM_LIGHTS];
     State _lightStates[NUM_LIGHTS];

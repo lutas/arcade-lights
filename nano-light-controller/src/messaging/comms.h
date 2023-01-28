@@ -13,7 +13,20 @@ public:
     void update(int millis);
 
 private:
+
+    bool switchCommand(byte command);
+
+    enum Command {
+        Off,
+        SetLightState,
+        SetPulseTime,
+        End
+    } _commState;
+
     IStateChange* _pHandler;
+
+    // if a command marker is sent, then await our new command
+    bool _newCommandState;
 };
 
 #endif

@@ -8,7 +8,7 @@
 class IStateChange {
 public:
 
-    virtual void onMessage(uint8_t lightId, State message) = 0;
+    virtual void setLightState(uint8_t lightId, State message) = 0;
 };
 
 #endif
