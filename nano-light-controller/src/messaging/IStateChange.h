@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "state.h"
+#include "../lights/state.h"
 
 class IStateChange {
 public:

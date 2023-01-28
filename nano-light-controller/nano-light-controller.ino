@@ -1,5 +1,5 @@
-#include "lightManager.h"
-#include "comms.h"
+#include "src/lights/lightManager.h"
+#include "src/messaging/comms.h"
 
 IEntity** pEntities;
 unsigned long currentTime = 0;

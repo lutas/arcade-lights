@@ -2,7 +2,7 @@
 #define _COMMS_H_
 
 #include "IStateChange.h"
-#include "IEntity.h"
+#include "../framework/IEntity.h"
 
 class Comms : public IEntity {
 

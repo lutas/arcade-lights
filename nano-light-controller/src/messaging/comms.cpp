@@ -1,7 +1,5 @@
 #include <Arduino.h>
 
-#include "state.h"
-
 #include "comms.h"
 
 namespace {

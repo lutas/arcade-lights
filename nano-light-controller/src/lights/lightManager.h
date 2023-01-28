@@ -4,11 +4,11 @@
 #include <stdint.h>
 
 #include "state.h"
-#include "IEntity.h"
-#include "IStateChange.h"
+#include "../framework/IEntity.h"
+#include "../messaging/IStateChange.h"
 
 #include "light.h"
-#include "pulse.h"
+#include "../framework/pulse.h"
 
 #define NUM_LIGHTS 8
 
