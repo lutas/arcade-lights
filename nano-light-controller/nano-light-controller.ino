@@ -1,16 +1,24 @@
 #include "lightManager.h"
+#include "comms.h"
 
-LightManager lights;
+IEntity** pEntities;
 
 bool on;
 
 void setup()
 {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
+  LightManager* pLights = new LightManager();
 
-  // lights = new LightManager();
-  lights.init();
+  static IEntity* pArr[] = { 
+    pLights, 
+    new Comms(*pLights) 
+  }; 
+  pEntities = pArr;
+  
+  int numEntities = sizeof(*pEntities) / sizeof(IEntity*);
+  for (int i = 0; i < numEntities; ++i) {
+    pEntities[i]->init();
+  }
 
   on = true;
 }
@@ -18,11 +26,13 @@ void setup()
 void loop()
 {
   // put your main code here, to run repeatedly:
-  on = !on;
+  on = !on;  
+  
+  int numEntities = sizeof(*pEntities) / sizeof(IEntity*);
+  for (int i = 0; i < numEntities; ++i) {
 
-  for (int i = 0; i < lights.numLights(); ++i)
-  {
-    lights.setLight(i, on);
+    pEntities[i]->update(0);
   }
+  
   delay(3000);
 }
