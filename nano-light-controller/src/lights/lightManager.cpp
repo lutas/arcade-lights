@@ -24,6 +24,11 @@ void LightManager::init() {
     _lights[light++].setPin(12);
     _lights[light++].setPin(14); // A0
     _lights[light++].setPin(16); // A2
+
+    
+    for (int i = 0; i < NUM_LIGHTS; ++i) {
+        setLightState(i, State::On);
+    }
 }
 
 void LightManager::setLight(uint32_t id, bool on) {
