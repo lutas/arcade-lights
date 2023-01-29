@@ -16,6 +16,7 @@ Comms::Comms(IStateChange& handler) :
 }
 
 void Comms::init() {
+    Serial.begin(9600);
 }
 
 bool Comms::switchCommand(byte command) {

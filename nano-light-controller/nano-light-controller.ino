@@ -3,6 +3,7 @@
 
 IEntity** pEntities;
 unsigned long currentTime = 0;
+int numEntities;
 
 void setup()
 {
@@ -14,7 +15,7 @@ void setup()
   }; 
   pEntities = pArr;
   
-  int numEntities = sizeof(*pEntities) / sizeof(IEntity*);
+  numEntities = sizeof(pArr) / sizeof(IEntity*);
   for (int i = 0; i < numEntities; ++i) {
     pEntities[i]->init();
   }
@@ -27,11 +28,10 @@ void loop()
   unsigned long elapsedTime = millis() - currentTime;
   currentTime = millis();
   
-  int numEntities = sizeof(*pEntities) / sizeof(IEntity*);
   for (int i = 0; i < numEntities; ++i) {
 
     pEntities[i]->update(elapsedTime);
-  }
+  }  
   
   delay(5);
 }
