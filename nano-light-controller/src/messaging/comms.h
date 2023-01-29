@@ -3,6 +3,7 @@
 
 #include "IStateChange.h"
 #include "../framework/IEntity.h"
+#include "data-buffer.h"
 
 class Comms : public IEntity {
 
@@ -15,6 +16,8 @@ public:
 private:
 
     bool switchCommand(byte command);
+    void handleLightData(byte data);
+    void handlePulseData(byte data);
 
     enum Command {
         Off,
@@ -24,6 +27,7 @@ private:
     } _commState;
 
     IStateChange* _pHandler;
+    DataBuffer _buffer;
 
     // if a command marker is sent, then await our new command
     bool _newCommandState;

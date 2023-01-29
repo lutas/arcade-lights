@@ -6,6 +6,11 @@ int ButtonWidth = 64;
 int ButtonHeight = 64;
 PFont f;
 
+byte StateOff = 0;
+byte StateOn = 1;
+byte StateSlowPulse = 2;
+byte StateFastPulse = 3;
+
 void setup() { 
   size(548, 200);
   
@@ -20,14 +25,33 @@ void setup() {
 void switchLight(byte index, byte state) {
   
   // send test data
-  println("sending data");
-  myPort.write(byte(0xFF));
+  println("sending light data");
+  myPort.write(byte(0xFE));
   myPort.write(byte(0x01));
   
   byte data = (byte)(index << 3 | state);
   
   myPort.write(data);   
   
+}
+
+void writeInt(int value) {
+  
+  myPort.write((value & 0xFF000000) >> 24);
+  myPort.write((value & 0x00FF0000) >> 16);
+  myPort.write((value & 0x0000FF00) >> 8);
+  myPort.write((value & 0x000000FF));
+  
+}
+
+void setPulse(byte id, int onDelay, int offDelay) {
+  println("sending pulse data");
+  myPort.write(byte(0xFE));
+  myPort.write(byte(0x02));
+  
+  myPort.write(id);
+  writeInt(onDelay);
+  writeInt(offDelay);
 }
 
 void toggleButton(byte index, String name, int x, int y) {
@@ -47,7 +71,12 @@ void toggleButton(byte index, String name, int x, int y) {
       fill(color(255, 255, 255));     
       
       if (mousePressed) {
-        switchLight(index, (byte)1);
+        if (index < 8) {
+          switchLight(index, StateFastPulse);
+        }
+        else if (index == 8) {
+          setPulse((byte)0, 1000, 1);
+        }
       }
   }
   
@@ -63,6 +92,8 @@ void drawGUI() {
   for (byte i = 0; i < 8; ++i) {    
     toggleButton(i, str(i + 1), 4 + i * (ButtonWidth + 4), 10);    
   }
+  
+  toggleButton((byte)8, "Pulse", 4, 100);
 }
 
 void draw() {

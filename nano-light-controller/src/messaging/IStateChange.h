@@ -9,6 +9,7 @@ class IStateChange {
 public:
 
     virtual void setLightState(uint8_t lightId, State message) = 0;
+    virtual void setPulseConfig(uint8_t pulse, int onDelay, int offDelay) = 0;
 };
 
 #endif

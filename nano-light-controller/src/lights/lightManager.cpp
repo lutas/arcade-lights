@@ -44,6 +44,16 @@ void LightManager::setLightState(uint8_t lightId, State state) {
     }
 }
 
+void LightManager::setPulseConfig(uint8_t pulse, int onDelay, int offDelay) {
+    if (pulse == 0) {
+        _fastPulse.setOnDelay(onDelay);
+        _fastPulse.setOffDelay(offDelay);
+    } else if (pulse == 1) {
+        _slowPulse.setOnDelay(onDelay);
+        _slowPulse.setOffDelay(offDelay);
+    }
+}
+
 void LightManager::update(int millis) {
     bool fastPulseChanged = _fastPulse.update(millis);
     bool slowPulseChanged = _slowPulse.update(millis);    

@@ -25,6 +25,8 @@ public:
     
     // IStateChange
     void setLightState(uint8_t lightId, State state);
+    void setPulseConfig(uint8_t pulse, int onDelay, int offDelay);
+    
 private:
     Light _lights[NUM_LIGHTS];
     State _lightStates[NUM_LIGHTS];

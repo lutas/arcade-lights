@@ -42,4 +42,4 @@ e.g. to set light 3 to FastPulse  0x00011001
 Modify the on and off delay in milliseconds for the supported pulses:
 
 Command: **0x02**
-Data: {pulseId} (1 byte) {timeInMillis} (4 bytes)
+Data: {pulseId} (1 byte) {onDelayMillis} (4 bytes) {offDelayMillis} (4 bytes)
