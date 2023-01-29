@@ -2,6 +2,8 @@
 
 #include "comms.h"
 
+//#define _DEBUG_STATEMENTS 0
+
 namespace {
     const int MessageLength = 2;
 
@@ -31,18 +33,20 @@ bool Comms::switchCommand(byte command) {
     _commState = static_cast<Command>(command);
     _buffer.reset();
 
-    // Serial.print("Comm state now ");
-    // switch (_commState)
-    // {
-    // case Command::Off:
-    //     Serial.println("Off"); break;
-    // case Command::SetLightState:
-    //     Serial.println("SetLightState"); break;
-    // case Command::SetPulseTime:
-    //     Serial.println("SetPulseTime"); break;
-    // case Command::End:
-    //     Serial.println("End"); break;
-    // }
+#ifdef _DEBUG_STATEMENTS
+    Serial.print("Comm state now ");
+    switch (_commState)
+    {
+    case Command::Off:
+        Serial.println("Off"); break;
+    case Command::SetLightState:
+        Serial.println("SetLightState"); break;
+    case Command::SetPulseTime:
+        Serial.println("SetPulseTime"); break;
+    case Command::End:
+        Serial.println("End"); break;
+    }
+#endif
     return true;
 }
     
@@ -52,12 +56,16 @@ void Comms::handleLightData(byte data) {
     uint8_t lightId = data >> 3;
     uint8_t stateId = data & 0x07;
     State state = static_cast<State>(stateId);
-    // Serial.print("v: ");
-    // Serial.print(v);
-    // Serial.print("Light: ");
-    // Serial.print(lightId);
-    // Serial.print(" State: ");
-    // Serial.println(stateId);
+
+#ifdef _DEBUG_STATEMENTS
+    Serial.print("v: ");
+    Serial.print(v);
+    Serial.print("Light: ");
+    Serial.print(lightId);
+    Serial.print(" State: ");
+    Serial.println(stateId);
+#endif
+
     _pHandler->setLightState(lightId, state);
 }
 
@@ -65,29 +73,30 @@ void Comms::handlePulseData(byte data) {
 
     _buffer.write(data);
 
-    // Serial.print("Rcvd pulse data. Buffer size = ");
-    // Serial.print(_buffer.availableData());
-    // Serial.print(", data = ");
-    // Serial.println(data);
+#ifdef _DEBUG_STATEMENTS
+    Serial.print("Rcvd pulse data. Buffer size = ");
+    Serial.print(_buffer.availableData());
+    Serial.print(", data = ");
+    Serial.println(data);
+#endif
 
     // if we have enough data then parse it
     if (_buffer.availableData() == PulseTimeBufferSize) {
-
-        //Serial.println("Buffer complete");
 
         _buffer.seek(0);        
         byte pulseId = _buffer.readByte();
         int onDelay = _buffer.readInt();
         int offDelay = _buffer.readInt();
         
-
-        // Serial.println("RCVD pulse command");
-        // Serial.print("pulseId: ");
-        // Serial.print(pulseId);
-        // Serial.print(", onDelay: ");
-        // Serial.print(onDelay);
-        // Serial.print(", offDelay: ");
-        // Serial.println(offDelay);
+#ifdef _DEBUG_STATEMENTS
+        Serial.println("RCVD pulse command");
+        Serial.print("pulseId: ");
+        Serial.print(pulseId);
+        Serial.print(", onDelay: ");
+        Serial.print(onDelay);
+        Serial.print(", offDelay: ");
+        Serial.println(offDelay);
+#endif
 
         _pHandler->setPulseConfig(pulseId, onDelay, offDelay);
 
@@ -112,7 +121,9 @@ void Comms::update(int millis)
             }
         }        
         else if (data == CommandMarker && _commState != Command::SetPulseTime) {
+#ifdef _DEBUG_STATEMENTS
             Serial.println("New command marker");
+#endif
             _newCommandState = true;
             continue;
         }
